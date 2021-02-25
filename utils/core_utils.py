@@ -26,8 +26,11 @@ class Accuracy_Logger(object):
         self.data[Y]["correct"] += (Y_hat == Y)
 
     def log_batch(self, count, correct, c):
+        print(self.data)
+        print(count, correct, c)
         self.data[c]["count"] += count
         self.data[c]["correct"] += correct
+        print(self.data)
     
     def get_summary(self, c):
         count = self.data[c]["count"] 
@@ -202,7 +205,7 @@ def train(datasets, cur, args):
         writer.add_scalar('final/test_error', test_error, 0)
         writer.add_scalar('final/test_auc', test_auc, 0)
     
-    writer.close()
+        writer.close()
     return results_dict, test_auc, val_auc, 1-test_error, 1-val_error 
 
 
@@ -224,7 +227,7 @@ def train_loop_clam(epoch, model, loader, optimizer, n_classes, bag_weight, writ
         # print (len(data))
         data, label = data.to(device), label.to(device)
         logits, Y_prob, Y_hat, A, instance_dict = model(data, label=label, instance_eval=True)
-
+        print(A.shape)
         c,r = A.shape
         n_p = min(1,r)
         n_n = min(10,r)
@@ -248,13 +251,17 @@ def train_loop_clam(epoch, model, loader, optimizer, n_classes, bag_weight, writ
 
         p_acc = instance_dict['p_acc']
         n_acc = instance_dict['n_acc']
+        print('sample_size', sample_size)
+        print(p_acc)
+        print(n_acc)
         inst_logger.log_batch(n_p, int(p_acc * sample_size), 1)
         inst_logger.log_batch(n_n, int(n_acc * sample_size), 0)
 
         train_loss += loss_value
         if (batch_idx + 1) % 5 == 0:
-            print('batch {}, loss: {:.4f}, instance_loss: {:.4f}, weighted_loss: {:.4f}, '.format(batch_idx, loss_value, instance_loss_value, total_loss.item()) + 
-                'inst_p_acc: {:.4f}, inst_n_acc: {:.4f}, label: {}, bag_size: {}'.format(p_acc, n_acc, label.item(), data.size(0)))
+            # print('batch {}, loss: {:.4f}, instance_loss: {:.4f}, weighted_loss: {:.4f}, '.format(batch_idx, loss_value, instance_loss_value, total_loss.item()) + 
+            #     'inst_p_acc: {:.4f}, inst_n_acc: {:.4f}, label: {}, bag_size: {}'.format(p_acc, n_acc, label.item(), data.size(0)))
+            pass
 
         error = calculate_error(Y_hat, label)
         train_error += error

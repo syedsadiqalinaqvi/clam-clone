@@ -36,7 +36,7 @@ def save_hdf5(output_dir, asset_dict, mode='a'):
 	return output_dir
 
 
-def compute_w_loader(file_path, output_path, model, batch_size = 8, verbose = 0, print_every=20, pretrained=True):
+def compute_w_loader(file_path, output_path, model, batch_size = 8, verbose = 1, print_every=20, pretrained=True):
 	"""
 	args:
 		file_path: directory of bag (.h5 file)
@@ -104,6 +104,7 @@ if __name__ == '__main__':
 
 	for bag_candidate_idx in range(total):
 		bag_candidate = bags_dataset[bag_candidate_idx]
+		print(bag_candidate)
 		bag_name = os.path.basename(os.path.normpath(bag_candidate))
 
 		if '.h5' in bag_candidate:
