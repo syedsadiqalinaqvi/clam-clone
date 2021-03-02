@@ -174,7 +174,8 @@ class CLAM(nn.Module):
         return instance_loss,  -1, p_correct.float() / self.k_sample
 
     def forward(self, h, label=None, instance_eval=False, return_features=False, attention_only=False):
-        device = h.device
+        # device = h.device
+        device = 'cpu'
         A, h = self.attention_net(h)  # NxK        
         A = torch.transpose(A, 1, 0)  # KxN
         if attention_only:

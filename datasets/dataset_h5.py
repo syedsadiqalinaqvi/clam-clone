@@ -79,7 +79,7 @@ class Whole_Slide_Bag(Dataset):
 			img = hdf5_file['imgs'][idx]
 			coord = hdf5_file['coords'][idx]
 		
-		img = Image.fromarray(img)
+		img = Image.fromarray((img * 255).astype(np.uint8))
 		img = self.roi_transforms(img).unsqueeze(0)
 		return img, coord
 

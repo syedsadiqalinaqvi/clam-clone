@@ -101,7 +101,7 @@ parser.add_argument('--model_type', type=str, choices=['clam', 'mil'], default='
 parser.add_argument('--exp_code', type=str, help='experiment code for saving results')
 parser.add_argument('--weighted_sample', action='store_true', default=False, help='enable weighted sampling')
 parser.add_argument('--model_size', type=str, choices=['small', 'big'], default='small', help='size of model, does not affect mil')
-parser.add_argument('--task', type=str, choices=['camelyon_40x_cv',  'tcga_kidney_cv','colon_cancer'])
+parser.add_argument('--task', type=str, choices=['camelyon_40x_cv', 'tcga_kidney_cv', 'colon_cancer', 'tbx11k'])
 args = parser.parse_args()
 device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -164,6 +164,17 @@ elif args.task == 'colon_cancer':
                             patient_strat=False,
                             ignore=[])
 
+elif args.task == 'tbx11k':
+    args.n_classes=2
+    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/label_information_tb.csv',
+                            data_dir= os.path.join(args.data_root_dir, 'tb_features'),
+                            shuffle = False, 
+                            seed = args.seed, 
+                            print_info = True,
+                            label_dict = {'health': 0, 'tb': 1},
+                            patient_strat=False,
+                            ignore=[])
+
 
 elif args.task == 'tcga_kidney_cv':
     args.n_classes=3
@@ -187,6 +198,11 @@ if not os.path.isdir(args.results_dir):
 args.results_dir = os.path.join(args.results_dir, str(args.exp_code) + '_s{}'.format(args.seed))
 if not os.path.isdir(args.results_dir):
     os.mkdir(args.results_dir)
+
+# In case you want to set 10% of val images and 10% of test images
+# num_slides_cls = np.array([len(cls_ids) for cls_ids in dataset.patient_cls_ids])
+# val_num = np.floor(num_slides_cls * 0.1).astype(int)
+# test_num = np.floor(num_slides_cls * 0.1).astype(int)
 
 if args.split_dir is None:
     args.split_dir = os.path.join('splits', args.task+'_{}'.format(int(args.label_frac*100)))

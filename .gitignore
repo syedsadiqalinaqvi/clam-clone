@@ -3,3 +3,13 @@
 __pycache__/
 
 .vscode
+
+.ipynb_checkpoints
+
+tb_data
+tb_patches
+tb_patches_orig_20perimage
+tb_features
+tb_features_orig_20
+
+

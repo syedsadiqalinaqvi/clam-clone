@@ -1,14 +1,17 @@
 python main.py --k 3 \
---task colon_cancer \
+--task tbx11k \
 --lr 0.0002 \ 
---exp_code colon_cancer_v1 \
+--exp_code tb_v1 \
 --label_frac 0.75 \
 --inst_loss ce \
 --max_epochs 5
 
 
-python main.py --k 3 --task colon_cancer --lr 0.0002 --exp_code colon_cancer_v1 --label_frac 0.75 --inst_loss ce --max_epochs 2
+4. python main.py --k 3 --task tbx11k --lr 0.0002 --exp_code tb_v3 --label_frac 0.25 --inst_loss ce --max_epochs 2
 
-python extract_features.py --data_dir tb_patches --csv_path dataset_csv/label_information_colon.csv --feat_dir tb_features
+3. python extract_features.py --data_dir tb_patches --csv_path dataset_csv/label_information_tb.csv --feat_dir tb_features
 
-python create_patches.py --source tb_data --step_size 256 --patch_size 256 --patch False --save_dir tb_patches
+2. (use notebook instead) python create_patches.py --source tb_data --step_size 256 --patch_size 256 --patch False --save_dir tb_patches
+
+1. python create_splits_seq.py --task tbx11k --k 3 
+
